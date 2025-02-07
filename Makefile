@@ -13,6 +13,8 @@ TOOLS_DIR = ./tools
 PCI_IDS = ./pciids/pci.ids
 PCI_BIN = ./resources/pciids.bin
 
+PREFIX = /usr/local
+
 all: $(TOOLS_DIR)/generate_ids.c.out $(BIN)
 
 $(BIN): $(OBJS)
@@ -28,3 +30,8 @@ $(TOOLS_DIR)/generate_ids.c.out:
 clean:
 	rm -f $(OBJS) $(BIN)
 	$(MAKE) -C $(TOOLS_DIR) clean
+
+install: $(BIN)
+	cp $(BIN) $(PREFIX)/bin/$(BIN:.out=)
+	chmod +x $(PREFIX)/bin/$(BIN:.out=)
+

@@ -72,7 +72,7 @@ _start:
     mov qword [id_str], rax
     jmp .id_noquote
 .id_found:
-    ; check if line starts with ID="
+    ; check if line starts with ID=
     mov rdi, qword [id_str]
     lea rsi, [os_release_id] 
     call str_startswith
@@ -81,7 +81,7 @@ _start:
 .id_end:
     ; cleanup string
     mov rax, qword [id_str]
-    add rax, 3              ; remove "ID="
+    add rax, 3              ; remove ID=
     mov qword [id_str], rax
     push rax
     mov rsi, rax
@@ -125,7 +125,6 @@ _start:
     mov rdi, os_line
     mov rsi, 1
     call print
-    ; TODO get OS info
     ; open file
     mov rax, 2
     lea rdi, [os_release_path]
@@ -144,7 +143,7 @@ _start:
     mov qword [os_str], rax
     jmp .os_noquote
 .os_found:
-    ; check if line starts with NAME="
+    ; check if line starts with NAME=
     mov rdi, qword [os_str]
     lea rsi, [os_release_name] 
     call str_startswith
@@ -153,7 +152,7 @@ _start:
 .os_end:
     ; cleanup string
     mov rax, qword [os_str]
-    add rax, 5              ; remove "NAME="
+    add rax, 5              ; remove NAME=
     mov qword [os_str], rax
     push rax
     mov rsi, rax
@@ -292,7 +291,7 @@ _start:
     mov qword rcx, [sysinfo_buffer+56]  
     sub rax, rcx                        ; rax = totalram - freeram - sharedram - bufferam
     mov rcx, 1048576        ; 1024 * 1024
-    mov rdx, 0              ; important for unsigned devision
+    mov rdx, 0              ; important for unsigned division
     div rcx                 ; convert bytes into MiB
 
     mov rsi, rax            ; move result into rsi
