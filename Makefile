@@ -1,0 +1,30 @@
+AS = nasm
+LD = ld
+ASFLAGS = -f elf64
+LDFLAGS = -no-pie
+
+SRC_DIR = src
+BIN = assfetch.out
+
+SRCS = $(wildcard $(SRC_DIR)/*.asm)
+OBJS = $(patsubst $(SRC_DIR)/%.asm, %.o, $(SRCS))
+
+TOOLS_DIR = ./tools
+PCI_IDS = ./pciids/pci.ids
+PCI_BIN = ./resources/pciids.bin
+
+all: $(TOOLS_DIR)/generate_ids.c.out $(BIN)
+
+$(BIN): $(OBJS)
+	$(LD) $(LDFLAGS) -o $@ $^
+
+$(TOOLS_DIR)/generate_ids.c.out:
+	$(MAKE) -C $(TOOLS_DIR)
+	$(TOOLS_DIR)/generate_ids.c.out $(PCI_IDS) $(PCI_BIN)
+
+%.o: $(SRC_DIR)/%.asm
+	$(AS) $(ASFLAGS) -o $@ $<
+
+clean:
+	rm -f $(OBJS) $(BIN)
+	$(MAKE) -C $(TOOLS_DIR) clean
