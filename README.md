@@ -31,3 +31,12 @@ make
 ```bash
 sudo make install
 ```
+
+## Running
+```bash
+./assfetch.out
+```
+or after install
+```bash
+assfetch
+```
