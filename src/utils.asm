@@ -179,98 +179,53 @@ read_line:
     mov rdx, -1
     ret
 
-str_startswith_old:
-    ; rdi = base string
-    ; rsi = substring
-    ; return values:
-    ; rax = boolean (0 = true, 1 = false)
-
-    push rdi
-    push rsi
-
-    ; calculate length of substring
-    call _strlen
-    mov r9, rax
-    ; calculate length of base string
-    mov rsi, rdi
-    call _strlen
-    mov r8, rax
-    ; check if the base string is smaller than the substring
-    cmp r8, r9
-    jb .false
-
-    ; store size of substring in r10
-    mov r10, r9
-    dec r10
-
-    ; retrieve rdi and rsi from the stack
-    pop rsi      ; substr
-    pop rdi      ; base string
-
-    ; character per character loop to check if they are equal
-    mov r11, 0
-.loop:
-    cmp r11, r9
-    je .true
-    mov al, byte [rdi+r11]
-    cmp al, byte [rsi+r11]
-    jne .false
-    inc r11
-    jmp .loop
-.false:
-    mov rax, 1
-    ret
-.true:
-    mov rax, 0
-    ret
-
 str_startswith:
     ; rdi = base string
     ; rsi = substring
     ; return values:
     ; rax = boolean (0 = true, 1 = false)
 
-    push rdi               ; Save base string
-    push rsi               ; Save substring
+    push rdi               ; save base string
+    push rsi               ; save substring
 
-    ; Calculate length of substring
+    ; calculate length of substring
     call _strlen
     mov r9, rax            ; r9 = length of substring
 
-    ; Calculate length of base string
-    mov rsi, rdi            ; Restore base string into rdi
+    ; calculate length of base string
+    mov rsi, rdi           ; restore base string into rdi
     call _strlen
     mov r8, rax            ; r8 = length of base string
 
-    ; Retrieve rdi and rsi from the stack
-    pop rsi                ; Restore substring
-    pop rdi                ; Restore base string
+    ; retrieve rdi and rsi from the stack
+    pop rsi                ; restore substring
+    pop rdi                ; restore base string
 
-    ; Check if the base string is smaller than the substring
+    ; check if the base string is smaller than the substring
     cmp r8, r9
-    jb .false              ; If base string is smaller, return false
+    jb .false              ; if base string is smaller, return false
 
 
-    ; Loop through substring characters
+    ; loop through substring 
     mov r11, 0             ; r11 = loop index
 .loop:
-    cmp r11, r9            ; Check if we compared all characters in substring
-    je .true               ; If yes, return true
+    cmp r11, r9            ; check if all characters have been compared
+    je .true               ; if yes, return true
 
-    mov al, byte [rdi + r11]  ; Load base string character
-    cmp al, byte [rsi + r11]  ; Compare with substring character
-    je .next_char          ; If equal, continue with next character
+    mov al, byte [rdi + r11]  
+    cmp al, byte [rsi + r11]  
+    je .next_char          ; if equal, continue with next character
 
-    ; If characters don't match, return false
+    ; if it does not match, return false
 .false:
-    mov rax, 1              ; Return false (1)
+    mov rax, 1             
     ret
 
 .next_char:
-    inc r11                  ; Move to the next character in the substring/base string
-    jmp .loop                ; Continue the loop
+    inc r11                ; increment counter
+    jmp .loop                
 
 .true:
-    mov rax, 0              ; Return true (0)
+    mov rax, 0              
     ret
 

@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
+#include <ctype.h>
 
 int main(int argc, char** argv) {
     if (argc < 3) {
@@ -21,11 +23,17 @@ int main(int argc, char** argv) {
     }
 
     char buf[4096];
+    uint16_t vendor_id = 0;
+    char vendor_name[4096];
 
     while (fgets(buf, 4096, in_fp)) {
         if (buf[0] == '#') continue;
         //strstr();
-        puts(buf);   
+        //puts(buf);   
+        
+        if (isdigit(buf[0])) {
+            
+        } 
     }
    
     return 0;
