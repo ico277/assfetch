@@ -23,6 +23,7 @@ git submodule update --init --recursive
 
 ## Building
 ```bash
+cd ./assfetch
 make
 ```
 
