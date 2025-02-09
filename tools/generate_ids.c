@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
-#include <ctype.h>
 
 int main(int argc, char** argv) {
     if (argc < 3) {
@@ -22,19 +21,37 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    char buf[4096];
-    uint16_t vendor_id = 0;
-    char vendor_name[4096];
+    char buf[4096] = {0};
+
+    char vendor_id[5] = {0};
+    char vendor_name[4096] = {0};
+
+    char device_id[5] = {0};
+    char device_name[4096] = {0};
 
     while (fgets(buf, 4096, in_fp)) {
         if (buf[0] == '#') continue;
-        //strstr();
-        //puts(buf);   
-        
-        if (isdigit(buf[0])) {
-            
-        } 
+        // TODO stuffies
+        fprintf(stderr, "Processing: %s", buf);
+
+        if (buf[0] == '\t' && buf[1] != '\t' &&  sscanf(buf, "%4s  %4095[^\n]", vendor_id, vendor_name) == 2) {
+            fprintf(stderr, "VendorID: %s | VendorName: %s\n", vendor_id, vendor_name);
+        }
+        else if (sscanf(buf, "\t%4s  %4095[^\n]", device_id, device_name) == 2) {
+            fprintf(stderr, "DeviceID: %s | DeviceName: %s\n", device_id, device_name);
+            fprintf(out_fp, "0x%s 0x%s %s %s\n", vendor_id, device_id, vendor_name, device_name);
+        }
+        /*else if (buf[0] == '\t' && buf[1] == '\t') {
+            // This is a subdevice line, so we skip it
+            continue;
+        }*/
+        else {
+            fprintf(stderr, "Unmatched line: %s", buf);
+        }
     }
+
+    fclose(in_fp);
+    fclose(out_fp);
    
     return 0;
 }
