@@ -2,6 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdbool.h>
+#include <ctype.h>
+#include <stdint.h>
+
+bool is_valid_hex_n(char* str, uint64_t n) {
+    for (uint64_t i = 0; i < n; i++) {
+        char c = str[i];
+        if (!isxdigit(c)) {
+            return false;
+        }
+    }
+
+    return true;
+}
 
 int main(int argc, char** argv) {
     if (argc < 3) {
@@ -32,20 +46,11 @@ int main(int argc, char** argv) {
     while (fgets(buf, 4096, in_fp)) {
         if (buf[0] == '#') continue;
         // TODO stuffies
-        fprintf(stderr, "Processing: %s", buf);
-
-        if (buf[0] == '\t' && buf[1] != '\t' &&  sscanf(buf, "%4s  %4095[^\n]", vendor_id, vendor_name) == 2) {
-            fprintf(stderr, "VendorID: %s | VendorName: %s\n", vendor_id, vendor_name);
-        }
-        else if (sscanf(buf, "\t%4s  %4095[^\n]", device_id, device_name) == 2) {
-            fprintf(stderr, "DeviceID: %s | DeviceName: %s\n", device_id, device_name);
-            fprintf(out_fp, "0x%s 0x%s %s %s\n", vendor_id, device_id, vendor_name, device_name);
-        }
-        /*else if (buf[0] == '\t' && buf[1] == '\t') {
-            // This is a subdevice line, so we skip it
-            continue;
-        }*/
-        else {
+        if (buf[0] != '\t' && is_valid_hex_n(buf, 4)) {
+            fprintf(out_fp, "vendor: %s\n", buf);
+        } else if (buf[0] == '\t' && buf[1] != '\t' && is_valid_hex_n(buf + 1, 4)) {
+            fprintf(out_fp, "device: %s\n", buf);
+        } else {
             fprintf(stderr, "Unmatched line: %s", buf);
         }
     }
