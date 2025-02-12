@@ -19,7 +19,7 @@ bool is_valid_hex_n(char* str, uint64_t n) {
 
 int main(int argc, char** argv) {
     if (argc < 3) {
-        fprintf(stderr, "%s: Usage: <input> <output> [--cut-brackets]\n", argv[0]);
+        fprintf(stderr, "%s: Usage: <input> <output> [--cut-brackets,--verbose]\n", argv[0]);
         return 1;
     }
 
@@ -36,11 +36,14 @@ int main(int argc, char** argv) {
     }
 
     bool cutbrackets = false;
+    bool verbose = false;
 
     for (int i = 3; i < argc; i++) {
         char* arg = argv[i];
         if (strcmp(arg, "--cut-brackets") == 0) {
             cutbrackets = true;
+        } else if (strcmp(arg, "--verbose") == 0) {
+            verbose = true;
         } else {
             fprintf(stderr, "Invalid argument: %s\n", arg);
             return 1;
@@ -100,9 +103,10 @@ int main(int argc, char** argv) {
                 }
 
             }
-            fprintf(out_fp, "0x%s0x%s:%s %s\n", vendor_id, device_id, vendor_name + vendor_offset, device_name + device_offset);
-        } else {
-            fprintf(stderr, "Unmatched line: %s", buf);
+            fprintf(out_fp, "0x%s0x%s:%s %s", vendor_id, device_id, vendor_name + vendor_offset, device_name + device_offset);
+            fputc(0x00, out_fp);
+        } else if (verbose) {
+            fprintf(stderr, "unmatched line: %s", buf);
         }
     }
 

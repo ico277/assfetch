@@ -40,6 +40,9 @@ section .data
     id_fp:           times 8  db 0  ; file pointer
     id_str:          times 8  db 0  ; string pointer
     
+    
+    pciids:          incbin "./resources/pciids.bin"
+    gpu_id:          times 13 db 0   ; 12 bytes + null terminator   
 
 section .bss
     cpu_name resb 49    ; 48 bytes + null terminator
@@ -52,6 +55,14 @@ section .text
     extern str_startswith
     extern _strlen
     extern print_art
+
+get_gpu:
+    ; return values:
+    ; rax = char* GPU name
+
+    ; loop through /sys/bus/pci/devices/
+
+    ret
 
 _start:
     ; open file
@@ -272,8 +283,9 @@ _start:
     mov rsi, 1
     call print
     ; TODO get gpu info
+    call get_gpu
     ; print gpu info
-    mov rdi, unknown
+    mov rdi, rax
     mov rsi, 0
     call print
     add qword [lines_printed], 1
