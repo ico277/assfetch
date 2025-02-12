@@ -19,7 +19,7 @@ bool is_valid_hex_n(char* str, uint64_t n) {
 
 int main(int argc, char** argv) {
     if (argc < 3) {
-        fprintf(stderr, "%s: Usage: [input] [output]\n", argv[0]);
+        fprintf(stderr, "%s: Usage: <input> <output> [--cut-brackets]\n", argv[0]);
         return 1;
     }
 
@@ -35,6 +35,18 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    bool cutbrackets = false;
+
+    for (int i = 3; i < argc; i++) {
+        char* arg = argv[i];
+        if (strcmp(arg, "--cut-brackets") == 0) {
+            cutbrackets = true;
+        } else {
+            fprintf(stderr, "Invalid argument: %s\n", arg);
+            return 1;
+        }
+    }
+
     char buf[4096] = {0};
 
     char vendor_id[5] = {0};
@@ -47,9 +59,48 @@ int main(int argc, char** argv) {
         if (buf[0] == '#') continue;
         // TODO stuffies
         if (buf[0] != '\t' && is_valid_hex_n(buf, 4)) {
-            fprintf(out_fp, "vendor: %s\n", buf);
+            strncpy(vendor_id, buf, 4);
+            strncpy(vendor_name, buf + 6, 4096);
+            uint64_t vendor_name_size = strlen(vendor_name);
+            // remove newline at the end
+            if (vendor_name[vendor_name_size - 1] == '\n') {
+                vendor_name[vendor_name_size - 1] = '\0';
+            }
+            //fprintf(out_fp, "vendor[%s]:%s\n", vendor_id, vendor_name);
         } else if (buf[0] == '\t' && buf[1] != '\t' && is_valid_hex_n(buf + 1, 4)) {
-            fprintf(out_fp, "device: %s\n", buf);
+            strncpy(device_id, buf + 1, 4);
+            strncpy(device_name, buf + 7, 4096);
+            uint64_t device_name_size = strlen(device_name);
+            // remove newline at the end
+            if (device_name[device_name_size - 1] == '\n') {
+                device_name[device_name_size - 1] = '\0';
+                device_name_size -= 1;
+            }
+            uint64_t device_offset = 0;
+            if (cutbrackets) {
+                char* bracket_open = strstr(device_name, "[");
+                char* bracket_close = strstr(device_name, "]");
+                if (bracket_open) {
+                    device_offset = bracket_open - device_name + 1;
+                }
+                if (bracket_close) {
+                    *(bracket_close) = '\0';
+                }
+
+            }
+            uint64_t vendor_offset = 0;
+            if (cutbrackets) {
+                char* bracket_open = strstr(vendor_name, "[");
+                char* bracket_close = strstr(vendor_name, "]");
+                if (bracket_open) {
+                    vendor_offset = bracket_open - vendor_name + 1;
+                }
+                if (bracket_close) {
+                    *(bracket_close) = '\0';
+                }
+
+            }
+            fprintf(out_fp, "0x%s0x%s:%s %s\n", vendor_id, device_id, vendor_name + vendor_offset, device_name + device_offset);
         } else {
             fprintf(stderr, "Unmatched line: %s", buf);
         }

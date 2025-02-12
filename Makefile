@@ -12,6 +12,7 @@ OBJS = $(patsubst $(SRC_DIR)/%.asm, %.o, $(SRCS))
 TOOLS_DIR = ./tools
 PCI_IDS = ./pciids/pci.ids
 PCI_BIN = ./resources/pciids.bin
+PCI_ARGS = --cut-brackets
 
 PREFIX = /usr/local
 
@@ -22,7 +23,7 @@ $(BIN): $(OBJS)
 
 $(TOOLS_DIR)/generate_ids.c.out:
 	$(MAKE) -C $(TOOLS_DIR)
-	$(TOOLS_DIR)/generate_ids.c.out $(PCI_IDS) $(PCI_BIN)
+	$(TOOLS_DIR)/generate_ids.c.out $(PCI_IDS) $(PCI_BIN) $(PCI_ARGS)
 
 %.o: $(SRC_DIR)/%.asm
 	$(AS) $(ASFLAGS) -o $@ $<
