@@ -60,8 +60,10 @@ get_gpu:
     ; return values:
     ; rax = char* GPU name
 
-    ; loop through /sys/bus/pci/devices/
+    ; TODO loop through /sys/bus/pci/devices/
 
+    ; to not brick anything for now
+    lea rax, [unknown]
     ret
 
 _start:
