@@ -18,6 +18,7 @@ git clone --recursive https://github.com/ico277/assfetch
 or
 ```bash
 git clone https://github.com/ico277/assfetch
+cd assfetch
 git submodule update --init --recursive
 ```
 
