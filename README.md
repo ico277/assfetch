@@ -4,7 +4,7 @@ Yet another pfetch/neofetch clone written in x86_64 linux assembly.
 # Build Instructions
 ## Build Dependencies
 - nasm
-- gcc
+- gcc (or any other C11 compatible C compiler like clang or tcc)
 - make
 - git (for cloning)
 
