@@ -41,7 +41,7 @@ section .data
     id_str:          times 8  db 0  ; string pointer
     
     
-    ;pciids:          incbin "./resources/pciids.bin"
+    pciids:          incbin "./resources/pciids.out"
     gpu_id:          times 13 db 0   ; 12 bytes + null terminator   
 
 section .bss

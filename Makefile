@@ -11,7 +11,7 @@ OBJS = $(patsubst $(SRC_DIR)/%.asm, %.o, $(SRCS))
 
 TOOLS_DIR = ./tools
 PCI_IDS = ./pciids/pci.ids
-PCI_BIN = ./resources/pciids.bin
+PCI_BIN = ./resources/pciids.out
 PCI_ARGS = --cut-brackets
 
 PREFIX = /usr/local
