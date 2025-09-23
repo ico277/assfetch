@@ -56,15 +56,16 @@ section .text
     extern _strlen
     extern print_art
 
-get_gpu:
+extern get_gpu
+;get_gpu:
     ; return values:
     ; rax = char* GPU name
 
     ; TODO loop through /sys/bus/pci/devices/
 
     ; to not brick anything for now
-    lea rax, [unknown]
-    ret
+    ;lea rax, [unknown]
+    ;ret
 
 _start:
     ; open file
